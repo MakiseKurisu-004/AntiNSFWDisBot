@@ -6,7 +6,7 @@ from io import BytesIO
 from PIL import Image
 import requests
 
-#TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv('TOKEN')
 client = discord.Client()
 
 @client.event
@@ -45,4 +45,4 @@ async def on_message(message):
     pass
   
 
-client.run('token')
+client.run(TOKEN)
