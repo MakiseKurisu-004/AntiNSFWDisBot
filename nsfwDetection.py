@@ -5,6 +5,9 @@ import urllib
 from io import BytesIO
 from PIL import Image
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 TOKEN = os.getenv('TOKEN')
 client = discord.Client()
