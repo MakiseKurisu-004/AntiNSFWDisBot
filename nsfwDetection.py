@@ -6,6 +6,8 @@ from io import BytesIO
 from PIL import Image
 import requests
 from dotenv import load_dotenv
+import numpy as np
+from keras.preprocessing import image
 
 load_dotenv()
 
@@ -23,9 +25,6 @@ async def on_message(message):
   print(message.attachments)
   try:
     print(message.attachments[0].url)
-    import numpy as np
-    from keras.preprocessing import image
-    import os
     
     response = requests.get(message.attachments[0].url)
     images = Image.open(BytesIO(response.content))
@@ -33,19 +32,21 @@ async def on_message(message):
     test_image = image.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis = 0)
     CNN = predict.newCNN()
-    checkpoint_path = "training_1/cp.ckpt"
+    checkpoint_path = "training_2/cp.ckpt"
     checkpoint_dir = os.path.dirname(checkpoint_path)
-    CNN.load_weights(checkpoint_path)
+    CNN.load_weights(checkpoint_path).expect_partial()
     result = CNN.predict(test_image)
     if result[0][0] == 1:
         prediction = 'sfw'
+        print('sfw')
     else:
         prediction = 'nsfw'
-        print('sfw')
+        print('nsfw')
+    
     if prediction == 'nsfw':
       await message.delete()
   except IndexError:
     pass
-  
+
 
 client.run(TOKEN)
