@@ -24,27 +24,29 @@ async def on_ready():
 async def on_message(message):
   print(message.attachments)
   try:
-    print(message.attachments[0].url)
-    
-    response = requests.get(message.attachments[0].url)
-    images = Image.open(BytesIO(response.content))
-    test_image = images.resize((64,64))
-    test_image = image.img_to_array(test_image)
-    test_image = np.expand_dims(test_image, axis = 0)
-    CNN = predict.newCNN()
-    checkpoint_path = "training_2/cp.ckpt"
-    checkpoint_dir = os.path.dirname(checkpoint_path)
-    CNN.load_weights(checkpoint_path).expect_partial()
-    result = CNN.predict(test_image)
-    if result[0][0] == 1:
-        prediction = 'sfw'
-        print('sfw')
-    else:
-        prediction = 'nsfw'
-        print('nsfw')
-    
-    if prediction == 'nsfw':
-      await message.delete()
+    for attachment in message.attachments:
+      print(attachment.url)
+
+      response = requests.get(attachment.url)
+      images = Image.open(BytesIO(response.content))
+      test_image = images.resize((64,64))
+      test_image = image.img_to_array(test_image)
+      test_image = np.expand_dims(test_image, axis = 0)
+      CNN = predict.newCNN()
+      checkpoint_path = "training_2/cp.ckpt"
+      checkpoint_dir = os.path.dirname(checkpoint_path)
+      CNN.load_weights(checkpoint_path).expect_partial()
+      result = CNN.predict(test_image)
+      if result[0][0] == 1:
+          prediction = 'sfw'
+          print('sfw')
+      else:
+          prediction = 'nsfw'
+          print('nsfw')
+
+      if prediction == 'nsfw':
+        await message.delete()
+        break
   except IndexError:
     pass
 
