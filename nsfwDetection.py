@@ -29,8 +29,12 @@ async def on_message(message):
 
       response = requests.get(attachment.url)
       images = Image.open(BytesIO(response.content))
+      
       test_image = images.resize((64,64))
       test_image = image.img_to_array(test_image)
+      print(test_image.shape)
+      if len(test_image.shape) > 2 and test_image.shape[2] == 4: 
+        test_image = cv2.cvtColor(test_image, cv2.COLOR_BGRA2BGR)
       test_image = np.expand_dims(test_image, axis = 0)
       CNN = predict.newCNN()
       checkpoint_path = "training_2/cp.ckpt"
