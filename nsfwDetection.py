@@ -8,6 +8,7 @@ import requests
 from dotenv import load_dotenv
 import numpy as np
 from keras.preprocessing import image
+import cv2
 
 load_dotenv()
 
