@@ -50,6 +50,7 @@ async def on_message(message):
           print('nsfw')
 
       if prediction == 'nsfw':
+        await message.reply("The FBI has determined that the image you are sent was NSFW.")
         await message.delete()
         break
   except IndexError:
